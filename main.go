@@ -210,7 +210,7 @@ func truncateID(id string, length int) string {
 // extractJobProjectURL extracts project URL from job URL by removing '/jobs/someid' suffix
 func extractJobProjectURL(jobURL string) string {
 	// Remove '/jobs/...' pattern from the end
-	re := regexp.MustCompile(`/jobs/[^/]+/?$`)
+	re := regexp.MustCompile(`/-/jobs/[^/]+/?$`)
 	return re.ReplaceAllString(jobURL, "")
 }
 
