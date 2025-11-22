@@ -21,7 +21,7 @@ For Docker run.
 sudo docker run -d \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
   -p 9100:9100 \
-  evakdev/gitlab_runner_exporter \
+  evakdad/gitlab_runner_container_exporter \
   -listen-address=:8080
 ```
 
@@ -32,8 +32,8 @@ For Docker compose.
 version: '3.8'
 
 services:
-  gitlab_runner_exporter:
-    image: evakdev/gitlab_runner_exporter
+  gitlab_runner_container_exporter:
+    image: evakdad/gitlab_runner_container_exporter
     volumes:
       - type: bind
         source: /var/run/docker.sock
@@ -100,9 +100,9 @@ So, please note that if you set the scrape_interval of prometheus to less than o
 ### Build
 
 ```bash
-git clone https://github.com/evakdev/gitlab_runner_exporter
-cd gitlab_runner_exporter
-sudo docker build -t gitlab_runner_exporter_test .
+git clone https://github.com/evakdev/gitlab_runner_container_exporter
+cd gitlab_runner_container_exporter
+sudo docker build -t gitlab_runner_container_exporter_test .
 ```
 
 ### Run
@@ -111,6 +111,6 @@ sudo docker build -t gitlab_runner_exporter_test .
 sudo docker run -d \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
   -p 8080:8080 \
-  gitlab_runner_exporter_test \
+  gitlab_runner_container_exporter_test \
   -listen-address=:8080
 ```
