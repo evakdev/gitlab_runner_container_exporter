@@ -1,22 +1,14 @@
 
-# Notice
+# Gitlab Runner Container Exporter
 
-I don't maintain this repository very well, so please fork and use this.
+This is an exporter for docker-in-docker gitlab runners, where jobs are run as docker containers.
 
-# Docker State Exporter
-
-Exporter for docker container state
-
-Prometheus exporter for docker container state, written in Go.
-
-One of the best known exporters of docker container information is [cAdvisor](https://github.com/google/cadvisor).\
-However, cAdvisor does not export the state of the container.
-
-This exporter will only export the container status and the restarts count.
+The code is a combo of [https://github.com/chaddewitt/docker-stats-exporter](chaddewitt/docker-stats-exporter) [https://github.com/wywywywy/docker_stats_exporter](wywywywy/docker_stats_exporter).
+I merged them to gather two useful exporters in one. I have also added some runner-specific labels of my own.
 
 ## Installation and Usage
 
-The `docker_state_exporter` listens on HTTP port 8080 by default.
+The `Gitlab Runner Container Exporter` listens on HTTP port 9100 by default.
 
 ### Docker
 
@@ -25,7 +17,7 @@ For Docker run.
 ```bash
 sudo docker run -d \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
-  -p 8080:8080 \
+  -p 9100:9100 \
   karugaru/docker_state_exporter \
   -listen-address=:8080
 ```
@@ -37,8 +29,8 @@ For Docker compose.
 version: '3.8'
 
 services:
-  docker_state_exporter:
-    image: karugaru/docker_state_exporter
+  gitlab_runner_exporter:
+    image: evakdev/gitlab_runner_exporter
     volumes:
       - type: bind
         source: /var/run/docker.sock
@@ -49,20 +41,51 @@ services:
 
 ## Metrics
 
-This exporter will export the following metrics.
+This exporter will export the following metrics:
 
-- container_state_health_status
-- container_state_status
-- container_state_oomkilled
-- container_state_startedat
-- container_state_finishedat
-- container_restartcount
+- gitlab_runner_container_info
+- gitlab_runner_container_health_status
+- gitlab_runner_container_status
+- gitlab_runner_container_startedat
+- gitlab_runner_container_finishedat
+- gitlab_runner_container_restart_count
+- gitlab_runner_container_oomkilled
+- gitlab_runner_container_memory_usage_ratio
+- gitlab_runner_container_memory_usage_bytes
+- gitlab_runner_container_memory_usage_rss_bytes
+- gitlab_runner_container_memory_limit_bytes
+- gitlab_runner_container_cpu_usage_ratio
+- gitlab_runner_container_blockio_read_bytes
+- gitlab_runner_container_blockio_written_bytes
+- gitlab_runner_container_network_received_bytes
+- gitlab_runner_container_network_transmitted_bytes
 
-These metrics will be the same as the results of docker inspect.
+The source of these metrics are `docker inspect` for health and status, and `docker stats` for resource-related metrics. (Except for oomkilled which comes from docker inspect).
 
 This exporter also exports the standard
 [Go Collector](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#NewGoCollector)
 and [Process Collector](https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#NewProcessCollector).
+
+
+## Labels
+All metrics have `id` (shortened) and `name` labels by default.
+
+
+`gitlab_runner_container_info` will also include `image`, plus the following labels for gitlab runner job containers:
+
+- job_id
+- job_ref
+- job_commit_sha (shortened)
+- job_url_id
+- job_pipeline_id
+- job_project_id
+- job_runner_id
+
+You can also add your own labels to `gitlab_runner_container_info` by setting `CUSTOM_LABELS` environment variable:
+```
+CUSTOM_LABELS="final_label_1:raw_label_1,final_label_2:raw_label_2"
+```
+
 
 ## Caution
 
@@ -71,17 +94,12 @@ If a large number of requests are made, there will be performance issues. (I thi
 So, this app caches the result of docker inspect for 1 second.
 So, please note that if you set the scrape_interval of prometheus to less than one second, you may get the same result back.
 
-## Development building and running
-
-I am running this application on Docker (linux/amd64).
-I have not tested it in any other environment.
-
 ### Build
 
 ```bash
-git clone https://github.com/karugaru/docker_state_exporter
-cd docker_state_exporter
-sudo docker build -t docker_state_exporter_test .
+git clone https://github.com/evakdev/gitlab_runner_exporter
+cd gitlab_runner_exporter
+sudo docker build -t gitlab_runner_exporter_test .
 ```
 
 ### Run
@@ -90,6 +108,6 @@ sudo docker build -t docker_state_exporter_test .
 sudo docker run -d \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
   -p 8080:8080 \
-  docker_state_exporter_test \
+  gitlab_runner_exporter_test \
   -listen-address=:8080
 ```
