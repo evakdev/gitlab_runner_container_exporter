@@ -3,7 +3,10 @@
 
 This is an exporter for docker-in-docker gitlab runners, where jobs are run as docker containers.
 
-The code is a combo of [chaddewitt/docker-stats-exporter](https://github.com/chaddewitt/docker-stats-exporter) [wywywywy/docker_stats_exporter](https://github.com/wywywywy/docker_stats_exporter).
+The code is a combo of two other exporters:
+- [karugaru/docker_state_exporter](https://github.com/karugaru/docker_state_exporter) 
+- [wywywywy/docker_stats_exporter](https://github.com/wywywywy/docker_stats_exporter)
+
 I merged them to gather two useful sets of metrics in one. To make it better suited for runners, I have also added some runner-specific labels of my own.
 
 ## Installation and Usage
@@ -18,7 +21,7 @@ For Docker run.
 sudo docker run -d \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
   -p 9100:9100 \
-  karugaru/docker_state_exporter \
+  evakdev/gitlab_runner_exporter \
   -listen-address=:8080
 ```
 
