@@ -3,8 +3,8 @@
 
 This is an exporter for docker-in-docker gitlab runners, where jobs are run as docker containers.
 
-The code is a combo of [https://github.com/chaddewitt/docker-stats-exporter](chaddewitt/docker-stats-exporter) [https://github.com/wywywywy/docker_stats_exporter](wywywywy/docker_stats_exporter).
-I merged them to gather two useful exporters in one. I have also added some runner-specific labels of my own.
+The code is a combo of [chaddewitt/docker-stats-exporter](https://github.com/chaddewitt/docker-stats-exporter) [wywywywy/docker_stats_exporter](https://github.com/wywywywy/docker_stats_exporter).
+I merged them to gather two useful sets of metrics in one. To make it better suited for runners, I have also added some runner-specific labels of my own.
 
 ## Installation and Usage
 
