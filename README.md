@@ -22,7 +22,7 @@ sudo docker run -d \
   -v "/var/run/docker.sock:/var/run/docker.sock" \
   -p 9100:9100 \
   evakdad/gitlab_runner_container_exporter \
-  -listen-address=:8080
+  -listen-address=:9100
 ```
 
 For Docker compose.
@@ -75,6 +75,7 @@ All metrics have `id` (shortened) and `name` labels by default.
 
 
 `gitlab_runner_container_info` will also include `image`, plus the following labels for gitlab runner job containers:
+
 
 - job_id
 - job_ref

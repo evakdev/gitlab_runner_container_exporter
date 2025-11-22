@@ -677,7 +677,7 @@ func main() {
 			http.Error(w, "Support GET only", http.StatusNotFound)
 			return
 		}
-		fmt.Fprintf(w, "<h1>docker stats exporter</h1>")
+		fmt.Fprintf(w, "<h1>Gitlab Runner Container Exporter</h1>")
 	})
 
 	http.HandleFunc("/-/healthy", func(w http.ResponseWriter, r *http.Request) {
