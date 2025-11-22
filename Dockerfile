@@ -8,10 +8,10 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY *.go ./
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o /go/bin/docker_state_exporter .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o /go/bin/gitlab_runner_container_exporter .
 
 FROM alpine:3
-COPY --from=builder /go/bin/docker_state_exporter /go/bin/docker_state_exporter
+COPY --from=builder /go/bin/gitlab_runner_container_exporter /go/bin/gitlab_runner_container_exporter
 EXPOSE 8080
-ENTRYPOINT ["/go/bin/docker_state_exporter"]
+ENTRYPOINT ["/go/bin/gitlab_runner_container_exporter"]
 CMD ["-listen-address=:8080"]
